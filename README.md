@@ -128,6 +128,8 @@ Redirect the user to `/o/authenticate` with the following query parameters:
 | `redirect_uri` | URI to redirect after login |
 
 - ✅ If valid → user sees the login page
+- ✅ if user is not registered in oidc provieder db then first signup then login
+- ✅ if user already registered then just proceed with login
 - ✅ After login → redirected back with an **authorization code**
 
 ### Step 3 — Exchange Authorization Code for Token
