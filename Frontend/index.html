@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login & Signup</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(120deg, #2980b9, #6dd5fa);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        width: 350px;
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .form {
+        display: none;
+        flex-direction: column;
+      }
+
+      .form.active {
+        display: flex;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      input {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 10px;
+        border: none;
+        background: #2980b9;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #1f6691;
+      }
+
+      .toggle {
+        text-align: center;
+        margin-top: 15px;
+        cursor: pointer;
+        color: #2980b9;
+      }
+
+      .toggle:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3 class="heading">Welcome</h3>
+      <!-- Login Form -->
+      <form
+        class="form active"
+        id="loginForm"
+        action="http://localhost:8080/authenticate/sign-in"
+        method="POST"
+      >
+        <input type="email" name="email" placeholder="Email" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <input
+          type="hidden"
+          name="redirect_url"
+          id="redirectUrl"
+          value="REDIRECT_URL_PLACEHOLDER"
+        />
+        <input
+          type="hidden"
+          name="clientId"
+          id="userclientId"
+          value="client_id"
+        />
+        <button>Login</button>
+        <div class="toggle" onclick="toggleForm()">
+          Don't have an account? Sign Up
+        </div>
+      </form>
+
+      <!-- Signup Form -->
+      <div class="form" id="signupForm">
+        <h2>Sign Up</h2>
+        <input
+          type="text"
+          class="firstName"
+          placeholder="First Name"
+          required
+        />
+        <input type="text" class="lastName" placeholder="last Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <button onclick="signup()">Sign Up</button>
+        <div class="toggle" onclick="toggleForm()">
+          Already have an account? Login
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleForm() {
+        const login = document.getElementById("loginForm");
+        const signup = document.getElementById("signupForm");
+
+        login.classList.toggle("active");
+        signup.classList.toggle("active");
+      }
+
+      async function signup() {
+        let signup = document.querySelector("#signupForm");
+        let firstName = signup.querySelector(".firstName").value;
+        let lastName = signup.querySelector(".lastName").value;
+        let email = signup.querySelector('[type="email"]').value;
+        let password = signup.querySelector('[type="password"]').value;
+
+        if (!firstName || !lastName || !email || !password) {
+          alert("Fill all the values");
+          return;
+        }
+        if (password.trim().length < 8) {
+          alert("Password should at least 8 character");
+          return;
+        }
+
+        let response = await fetch(
+          "http://localhost:8080/authenticate/sign-up",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              firstName,
+              lastName,
+              email,
+              password,
+            }),
+          },
+        );
+
+        let data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          alert(data.message || "Something went wrong. Please try again.");
+          return;
+        } else {
+          alert("account created successfully ! redirecting");
+          window.location.href = "http:localhost:8080/o/authenticate";
+        }
+      }
+    </script>
+  </body>
+</html>
