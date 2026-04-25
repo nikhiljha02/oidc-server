@@ -160,7 +160,7 @@ const token = data.identityToken;
 > ⚠️ Do **NOT** remove the `"Bearer "` prefix from the Authorization header.
 
 ```javascript
-await fetch("http://localhost:8080/userinfo", {
+await fetch("http://localhost:8080/o/userinfo", {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${token}`,
