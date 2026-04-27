@@ -65,7 +65,7 @@ const certs = async (req, res) => {
 };
 
 const wellKnown = async (req, res) => {
-  let issue = "http://localhost:8080";
+  let issue = "https://oidc-server-1.onrender.com";
   return res.json({
     issuer: issue,
     authorization_endpoint: `${issue}/o/authenticate`,
