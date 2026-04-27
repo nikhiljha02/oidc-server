@@ -51,7 +51,9 @@ const authenticate = async (req, res) => {
 
   const $ = cheerio.load(html);
 
-  $(".heading").text(`Sign in to ${user.applicationName}`);
+  $(".login_heading").html(
+    `Sign in to continue <span class='app-name'>${user.applicationName}</span>`,
+  );
 
   html = $.html();
   return res.send(html);
@@ -149,14 +151,19 @@ const signup = async (req, res) => {
       .json({ message: "user with this email already registered" });
     return;
   }
-
+  const { client_id, redirect_url } = req.session;
   await user.create({
     firstName,
     lastName: lastName ?? null,
     email,
     password,
   });
-  res.status(201).json({ ok: true, message: "registration done" });
+  res.status(201).json({
+    ok: true,
+    message: "registration done",
+    clientId: client_id,
+    redirect: redirect_url,
+  });
 };
 
 const login = async (req, res) => {

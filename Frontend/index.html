@@ -3,134 +3,575 @@
   <head>
     <meta charset="UTF-8" />
     <title>Login & Signup</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        --ink: #0f0e0d;
+        --paper: #faf8f5;
+        --accent: #c8a96e;
+        --accent-dark: #a8894e;
+        --muted: #8a8680;
+        --border: #e2ddd7;
+        --shadow: rgba(15, 14, 13, 0.12);
+        --card: #ffffff;
+      }
+
       * {
         margin: 0;
         padding: 0;
-        font-family: Arial, sans-serif;
         box-sizing: border-box;
       }
 
       body {
-        background: linear-gradient(120deg, #2980b9, #6dd5fa);
-        height: 100vh;
+        background: var(--paper);
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-      }
-
-      .container {
-        width: 350px;
-        background: #fff;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        font-family: "DM Sans", sans-serif;
         position: relative;
         overflow: hidden;
+      }
+
+      /* Geometric background texture */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(
+            circle at 20% 20%,
+            rgba(200, 169, 110, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(200, 169, 110, 0.06) 0%,
+            transparent 45%
+          ),
+          repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 60px,
+            rgba(200, 169, 110, 0.03) 60px,
+            rgba(200, 169, 110, 0.03) 61px
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Decorative corner lines */
+      body::after {
+        content: "";
+        position: fixed;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        bottom: 40px;
+        border: 1px solid rgba(200, 169, 110, 0.18);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: stretch;
+        width: 800px;
+        min-height: 500px;
+        background: var(--card);
+        border-radius: 2px;
+        box-shadow:
+          0 2px 4px var(--shadow),
+          0 20px 60px rgba(15, 14, 13, 0.1),
+          0 0 0 1px var(--border);
+        overflow: hidden;
+        animation: revealCard 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      @keyframes revealCard {
+        from {
+          opacity: 0;
+          transform: translateY(28px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Left decorative panel */
+      .panel {
+        width: 280px;
+        flex-shrink: 0;
+        background: var(--ink);
+        padding: 52px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(200, 169, 110, 0.1);
+        pointer-events: none;
+      }
+
+      .panel::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(200, 169, 110, 0.06);
+        pointer-events: none;
+      }
+
+      .panel-logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 28px;
+        font-weight: 300;
+        color: var(--paper);
+        letter-spacing: 0.04em;
+        position: relative;
+        z-index: 1;
+      }
+
+      .panel-logo span {
+        color: var(--accent);
+      }
+
+      .panel-tagline {
+        position: relative;
+        z-index: 1;
+      }
+
+      .panel-tagline p {
+        font-size: 13px;
+        font-weight: 300;
+        color: var(--muted);
+        line-height: 1.7;
+        letter-spacing: 0.01em;
+      }
+
+      .panel-divider {
+        width: 32px;
+        height: 1px;
+        background: var(--accent);
+        margin-bottom: 14px;
+        opacity: 0.7;
+      }
+
+      /* Right form area */
+      .form-area {
+        flex: 1;
+        padding: 52px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
       }
 
       .form {
         display: none;
         flex-direction: column;
+        animation: slideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .form.active {
         display: flex;
       }
 
-      h2 {
-        text-align: center;
-        margin-bottom: 20px;
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
 
-      input {
-        margin: 10px 0;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
+      /* Form heading */
+      .form-heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 34px;
+        font-weight: 300;
+        color: var(--ink);
+        letter-spacing: 0.01em;
+        margin-bottom: 6px;
+        line-height: 1.1;
       }
 
-      button {
-        margin-top: 10px;
-        padding: 10px;
+      .form-sub {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 300;
+        margin-bottom: 32px;
+        letter-spacing: 0.01em;
+      }
+
+      /* Input group */
+      .input-group {
+        position: relative;
+        margin-bottom: 18px;
+      }
+
+      .input-group label {
+        display: block;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      input[type="email"],
+      input[type="password"],
+      input[type="text"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--paper);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 300;
+        color: var(--ink);
+        outline: none;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+        letter-spacing: 0.01em;
+        margin: 0;
+      }
+
+      input[type="email"]:focus,
+      input[type="password"]:focus,
+      input[type="text"]:focus {
+        border-color: var(--accent);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.12);
+      }
+
+      input::placeholder {
+        color: #c0bbb4;
+        font-weight: 300;
+      }
+
+      /* Two column row for names */
+      .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      /* Submit button */
+      button[type="submit"],
+      button:not(.toggle-btn) {
+        margin-top: 8px;
+        padding: 13px 28px;
         border: none;
-        background: #2980b9;
-        color: white;
-        border-radius: 5px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 2px;
         cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+        position: relative;
+        overflow: hidden;
       }
 
-      button:hover {
-        background: #1f6691;
+      button[type="submit"]::after,
+      button:not(.toggle-btn)::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          transparent 40%,
+          rgba(200, 169, 110, 0.15)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
+      button[type="submit"]:hover,
+      button:not(.toggle-btn):hover {
+        background: #1e1d1b;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(15, 14, 13, 0.2);
+      }
+
+      button[type="submit"]:hover::after,
+      button:not(.toggle-btn):hover::after {
+        opacity: 1;
+      }
+
+      button[type="submit"]:active,
+      button:not(.toggle-btn):active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+
+      /* Toggle link */
       .toggle {
-        text-align: center;
-        margin-top: 15px;
+        margin-top: 22px;
+        font-size: 12.5px;
+        color: var(--muted);
+        font-weight: 300;
         cursor: pointer;
-        color: #2980b9;
+        letter-spacing: 0.01em;
+        text-align: left;
       }
 
-      .toggle:hover {
+      .toggle span {
+        color: var(--accent-dark);
+        font-weight: 500;
         text-decoration: underline;
+        text-decoration-color: transparent;
+        transition: text-decoration-color 0.2s ease;
+        cursor: pointer;
+      }
+
+      .toggle span:hover {
+        text-decoration-color: var(--accent-dark);
+      }
+
+      /* Gold accent bar at top of form area */
+      .form-area::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+      }
+
+      /* Hidden inputs invisible */
+      input[type="hidden"] {
+        display: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 680px) {
+        .wrapper {
+          flex-direction: column;
+          width: 95vw;
+          min-height: unset;
+        }
+        .panel {
+          width: 100%;
+          padding: 32px 28px;
+          flex-direction: row;
+          align-items: center;
+          gap: 20px;
+        }
+        .panel-tagline {
+          display: none;
+        }
+        .form-area {
+          padding: 36px 28px;
+        }
+      }
+      .app-name {
+        font-weight: bold;
+        color: red;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h3 class="heading">Welcome</h3>
-      <!-- Login Form -->
-      <form
-        class="form active"
-        id="loginForm"
-        action="http://localhost:8080/authenticate/sign-in"
-        method="POST"
-      >
-        <input type="email" name="email" placeholder="Email" required />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
-        <input
-          type="hidden"
-          name="redirect_url"
-          id="redirectUrl"
-          value="REDIRECT_URL_PLACEHOLDER"
-        />
-        <input
-          type="hidden"
-          name="clientId"
-          id="userclientId"
-          value="client_id"
-        />
-        <button>Login</button>
-        <div class="toggle" onclick="toggleForm()">
-          Don't have an account? Sign Up
+    <div class="wrapper">
+      <!-- Left decorative panel -->
+      <div class="panel">
+        <div class="panel-logo">Fast authentication <span>·</span>system</div>
+        <div class="panel-tagline">
+          <div class="panel-divider"></div>
+          <p>
+            A simple, secure, and blazing-fast authentication system built for
+            modern web applications. Experience seamless login and signup with
+            our OIDC-based solution, designed for modern web applications.
+          </p>
         </div>
-      </form>
+      </div>
 
-      <!-- Signup Form -->
-      <div class="form" id="signupForm">
-        <h2>Sign Up</h2>
-        <input
-          type="text"
-          class="firstName"
-          placeholder="First Name"
-          required
-        />
-        <input type="text" class="lastName" placeholder="last Name" required />
-        <input type="email" placeholder="Email" required />
-        <input type="password" placeholder="Password" required />
-        <button onclick="signup()">Sign Up</button>
-        <div class="toggle" onclick="toggleForm()">
-          Already have an account? Login
+      <!-- Right form area -->
+      <div class="form-area">
+        <!-- Login Form -->
+        <form
+          class="form active"
+          id="loginForm"
+          action="http://localhost:8080/authenticate/sign-in"
+          method="POST"
+        >
+          <div class="form-heading">Welcome back</div>
+          <div class="form-sub login_heading">Sign in to continue</div>
+
+          <div class="input-group">
+            <label>Email address</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              id="loginPassword"
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              required
+            />
+            <label
+              style="
+                margin-top: 6px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+              "
+            >
+              <input
+                type="checkbox"
+                onclick="togglePassword('loginPassword')"
+              />
+              Show Password
+            </label>
+          </div>
+
+          <input
+            type="hidden"
+            name="redirect_url"
+            id="redirectUrl"
+            value="REDIRECT_URL_PLACEHOLDER"
+          />
+          <input
+            type="hidden"
+            name="clientId"
+            id="userclientId"
+            value="client_id"
+          />
+
+          <button type="submit">Sign In</button>
+
+          <div class="toggle">
+            No account yet? <span onclick="toggleForm()">Create one</span>
+          </div>
+        </form>
+
+        <!-- Signup Form -->
+        <div class="form" id="signupForm">
+          <div class="form-heading">Get started</div>
+          <div class="form-sub">
+            Create your account in seconds with Fast Auth
+          </div>
+
+          <div class="input-row">
+            <div class="input-group">
+              <label>First name</label>
+              <input
+                type="text"
+                class="firstName"
+                placeholder="Jane"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <label>Last name</label>
+              <input type="text" class="lastName" placeholder="Doe" required />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Email address</label>
+            <input type="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              id="signupPassword"
+              placeholder="Min. 8 characters"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Re-enter password"
+              required
+            />
+          </div>
+
+          <label
+            style="
+              margin-bottom: 10px;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              font-size: 11px;
+            "
+          >
+            <input
+              type="checkbox"
+              onclick="
+                togglePassword('signupPassword');
+                togglePassword('confirmPassword');
+              "
+            />
+            Show Passwords
+          </label>
+          <button onclick="signup()">Create Account</button>
+
+          <div class="toggle">
+            Already have an account? <span onclick="toggleForm()">Sign in</span>
+          </div>
         </div>
       </div>
     </div>
 
     <script>
+      function togglePassword(id) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+          input.type = "text";
+        } else {
+          input.type = "password";
+        }
+      }
       function toggleForm() {
         const login = document.getElementById("loginForm");
         const signup = document.getElementById("signupForm");
@@ -144,7 +585,13 @@
         let firstName = signup.querySelector(".firstName").value;
         let lastName = signup.querySelector(".lastName").value;
         let email = signup.querySelector('[type="email"]').value;
-        let password = signup.querySelector('[type="password"]').value;
+        let password = document.getElementById("signupPassword").value;
+        let confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match");
+          return;
+        }
 
         if (!firstName || !lastName || !email || !password) {
           alert("Fill all the values");
@@ -175,7 +622,7 @@
           return;
         } else {
           alert("account created successfully ! redirecting");
-          window.location.href = "http:localhost:8080/o/authenticate";
+          window.location.href = `http://localhost:8080/o/authenticate?client_id=${data.clientId}&redirect_url=${data.redirect}`;
         }
       }
     </script>
