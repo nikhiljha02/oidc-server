@@ -190,6 +190,9 @@ const login = async (req, res) => {
     return res.status(422).json({ message: "Invalid email or password" });
   }
 
+  loginUser.appAccess.set(checkClient.applicationName, true);
+  await loginUser.save();
+
   // Generate a unique authorization code
   const authCode = crypto.randomBytes(4).toString("hex");
   await authCodeSchema.create({
@@ -259,6 +262,18 @@ const check = async (req, res) => {
   res.json({ message: "checkPoint" });
 };
 
+const logout = async (req, res) => {
+  const { id, appName } = req.body;
+  let currentUser = await user.findByIdAndUpdate(id, {
+    $set: {
+      [`appAccess.${appName}`]: true,
+    },
+  });
+  await currentUser.save();
+
+  return res.json({ ok: true, message: "userLog out" });
+};
+
 export {
   homePage,
   health,
@@ -270,6 +285,6 @@ export {
   userInfo,
   token,
   clientAdd,
-  //   callback,
+  logout,
   check,
 };

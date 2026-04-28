@@ -10,13 +10,16 @@ route.get("/jwks.json", services.certs);
 route.post("/authenticate/sign-in", services.login);
 route.post("/authenticate/sign-up", services.signup);
 route.get("/o/userinfo", (req, res) => {
-    return res.send({ error: "invalid_request", error_description: "Invalid Credentials" });
+  return res.send({
+    error: "invalid_request",
+    error_description: "Invalid Credentials",
+  });
 });
 route.post("/o/userinfo", services.userInfo);
 route.post("/addClient", services.clientAdd);
 route.post("/token", services.token);
 route.get("/token", (req, res) => {
-    res.status(404).send(`
+  res.status(404).send(`
     <html>
       <body style="font-family:sans-serif;text-align:center;margin-top:50px;">
         <h1>404</h1>
@@ -26,4 +29,5 @@ route.get("/token", (req, res) => {
   `);
 });
 route.get("/check", services.check);
+route.post("/logout", services.logout);
 export default route;
