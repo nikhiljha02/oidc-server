@@ -266,7 +266,7 @@ const logout = async (req, res) => {
   const { id, appName } = req.body;
   let currentUser = await user.findByIdAndUpdate(id, {
     $set: {
-      [`appAccess.${appName}`]: true,
+      [`appAccess.${appName}`]: false,
     },
   });
   await currentUser.save();
