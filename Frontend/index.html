@@ -426,7 +426,7 @@
         <form
           class="form active"
           id="loginForm"
-          action="http://localhost:8080/authenticate/sign-in"
+          action="https://oidc-server-1.onrender.com/authenticate/sign-in"
           method="POST"
         >
           <div class="form-heading">Welcome back</div>
@@ -603,7 +603,7 @@
         }
 
         let response = await fetch(
-          "http://localhost:8080/authenticate/sign-up",
+          "https://oidc-server-1.onrender.com/authenticate/sign-up",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

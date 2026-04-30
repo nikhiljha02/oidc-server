@@ -121,7 +121,7 @@ const token = async (req, res) => {
   const loginUser = await user.findById(clientCode.userId);
 
   const claims = {
-    iss: "http://localhost:8080",
+    iss: "https://oidc-server-1.onrender.com",
     sub: loginUser.id,
     email: loginUser.email,
     exp: Math.floor(Date.now() / 1000) + 3600,
