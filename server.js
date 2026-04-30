@@ -23,6 +23,7 @@ app.use("/", authRoute);
 async function main() {
     await connectDB();
     app.listen(PORT, "0.0.0.0", () => {
+        console.log("ENV PORT:", process.env.PORT);
         console.log(`server is running on development ${PORT} `);
     });
 }
