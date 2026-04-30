@@ -5,7 +5,7 @@ import connectDB from "./db.js";
 import session from "express-session";
 import "dotenv/config";
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // app.use("/api", authRoute);
 app.use(
@@ -22,7 +22,7 @@ app.use(
 app.use("/", authRoute);
 async function main() {
     await connectDB();
-    app.listen(PORT || 8080, () => {
+    app.listen(PORT, "0.0.0.0", () => {
         console.log(`server is running on development ${PORT} `);
     });
 }
