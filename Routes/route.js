@@ -30,4 +30,5 @@ route.get("/token", (req, res) => {
 });
 route.get("/check", services.check);
 route.post("/logout", services.logout);
+route.post("/ip", services.ipConfig);
 export default route;

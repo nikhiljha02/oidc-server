@@ -274,6 +274,15 @@ const logout = async (req, res) => {
   return res.json({ ok: true, message: "userLog out" });
 };
 
+const ipConfig = async (req, res) => {
+  let ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+  if (ip.includes("::ffff:")) {
+    ip = ip.replace("::ffff:", "");
+  }
+  res.json({ ip });
+};
+
 export {
   homePage,
   health,
@@ -287,4 +296,5 @@ export {
   clientAdd,
   logout,
   check,
+  ipConfig,
 };
